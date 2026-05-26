@@ -125,6 +125,11 @@ const clockEl = document.getElementById("clock");
 // Query params overlay localStorage; they don't overwrite saved settings
 const settings = applyQueryParams(loadSettings());
 
+// Si la URL trajo parámetros, guardarlos para que la config quede persistente
+if (window.location.search) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+}
+
 function tick() {
   clockEl.textContent = formatTime(settings);
   requestAnimationFrame(tick);
