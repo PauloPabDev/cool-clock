@@ -1,0 +1,28 @@
+---
+import "../styles/global.css";
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cool Clock</title>
+  </head>
+  <body class="flex items-center justify-center min-h-screen overflow-hidden relative">
+    <div
+      id="clock"
+      class="font-mono tracking-widest select-none leading-none text-center"
+    ></div>
+
+    <a
+      href="/config"
+      class="fixed bottom-6 right-6 text-white/30 hover:text-white/70 text-sm transition-colors duration-300"
+    >
+      ⚙ Configurar
+    </a>
+
+    <script src="/clock.js" defer is:inline></script>
+  </body>
+</html>

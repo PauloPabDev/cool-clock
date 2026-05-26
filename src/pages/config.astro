@@ -1,0 +1,312 @@
+---
+import "../styles/global.css";
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configurar — Cool Clock</title>
+  </head>
+  <body class="bg-zinc-950 min-h-screen flex items-center justify-center p-6">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 w-full max-w-lg shadow-2xl space-y-6">
+
+      <h1 class="text-white text-xl font-semibold tracking-wide">Configurar reloj</h1>
+
+      <!-- Tipografía -->
+      <div class="space-y-2">
+        <label for="fontFamily" class="text-zinc-400 text-sm block">
+          Tipografía
+          <span class="text-zinc-600 font-normal"> — elige del listado o escribe cualquier nombre de Google Fonts</span>
+        </label>
+        <input
+          id="fontFamily"
+          type="text"
+          list="font-list"
+          autocomplete="off"
+          placeholder="Ej: Roboto, Playfair Display…"
+          class="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 border border-zinc-700 focus:outline-none focus:border-zinc-500 placeholder-zinc-600"
+        />
+        <!-- Preview de la fuente seleccionada -->
+        <p id="fontPreview" class="text-zinc-300 text-2xl px-1 transition-all duration-300">
+          00:00:00
+        </p>
+
+        <datalist id="font-list">
+          <!-- Sistema -->
+          <option value="Mono (sistema)"></option>
+          <option value="Sans (sistema)"></option>
+          <option value="Serif (sistema)"></option>
+          <option value="Courier New"></option>
+          <option value="Georgia"></option>
+          <!-- Sans-serif -->
+          <option value="Roboto"></option>
+          <option value="Open Sans"></option>
+          <option value="Lato"></option>
+          <option value="Montserrat"></option>
+          <option value="Poppins"></option>
+          <option value="Inter"></option>
+          <option value="Nunito"></option>
+          <option value="Raleway"></option>
+          <option value="Oswald"></option>
+          <option value="Work Sans"></option>
+          <option value="Cabin"></option>
+          <option value="Josefin Sans"></option>
+          <option value="Exo 2"></option>
+          <option value="Titillium Web"></option>
+          <option value="Fira Sans"></option>
+          <option value="Manrope"></option>
+          <option value="DM Sans"></option>
+          <option value="Jost"></option>
+          <option value="Karla"></option>
+          <option value="Outfit"></option>
+          <option value="Plus Jakarta Sans"></option>
+          <option value="Space Grotesk"></option>
+          <option value="Urbanist"></option>
+          <option value="Sora"></option>
+          <option value="Libre Franklin"></option>
+          <option value="Nunito Sans"></option>
+          <option value="Rubik"></option>
+          <option value="Hind"></option>
+          <option value="Mulish"></option>
+          <option value="Barlow"></option>
+          <option value="Source Sans 3"></option>
+          <!-- Serif -->
+          <option value="Merriweather"></option>
+          <option value="Playfair Display"></option>
+          <option value="Lora"></option>
+          <option value="Libre Baskerville"></option>
+          <option value="Noto Serif"></option>
+          <option value="EB Garamond"></option>
+          <option value="Cormorant Garamond"></option>
+          <option value="Crimson Text"></option>
+          <option value="Vollkorn"></option>
+          <option value="Bitter"></option>
+          <option value="Arvo"></option>
+          <option value="Roboto Slab"></option>
+          <option value="PT Serif"></option>
+          <option value="Zilla Slab"></option>
+          <option value="Cinzel"></option>
+          <!-- Monospace -->
+          <option value="Fira Code"></option>
+          <option value="Roboto Mono"></option>
+          <option value="Source Code Pro"></option>
+          <option value="IBM Plex Mono"></option>
+          <option value="Space Mono"></option>
+          <option value="JetBrains Mono"></option>
+          <option value="Inconsolata"></option>
+          <option value="Courier Prime"></option>
+          <option value="Anonymous Pro"></option>
+          <option value="Overpass Mono"></option>
+          <option value="Share Tech Mono"></option>
+          <option value="Azeret Mono"></option>
+          <!-- Display / decorativa -->
+          <option value="Abril Fatface"></option>
+          <option value="Pacifico"></option>
+          <option value="Lobster"></option>
+          <option value="Dancing Script"></option>
+          <option value="Comfortaa"></option>
+          <option value="Quicksand"></option>
+          <option value="Righteous"></option>
+          <option value="Fjalla One"></option>
+          <option value="Anton"></option>
+          <option value="Bebas Neue"></option>
+          <option value="Teko"></option>
+          <option value="Permanent Marker"></option>
+          <option value="Yeseva One"></option>
+          <option value="Exo"></option>
+          <option value="Rajdhani"></option>
+          <option value="Orbitron"></option>
+          <option value="Audiowide"></option>
+          <option value="Michroma"></option>
+          <option value="Nova Square"></option>
+          <option value="Black Ops One"></option>
+          <option value="Press Start 2P"></option>
+        </datalist>
+      </div>
+
+      <!-- Color de fondo -->
+      <div class="flex items-center justify-between">
+        <label for="backgroundColor" class="text-zinc-400 text-sm">Color de fondo</label>
+        <input type="color" id="backgroundColor" class="w-10 h-10 rounded cursor-pointer border-0 bg-transparent" />
+      </div>
+
+      <!-- Color del texto -->
+      <div class="flex items-center justify-between">
+        <label for="textColor" class="text-zinc-400 text-sm">Color del texto</label>
+        <input type="color" id="textColor" class="w-10 h-10 rounded cursor-pointer border-0 bg-transparent" />
+      </div>
+
+      <!-- Tamaño del texto -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <label for="fontSize" class="text-zinc-400 text-sm">Tamaño del texto</label>
+          <span id="fontSizeLabel" class="text-zinc-500 text-sm">120px</span>
+        </div>
+        <input type="range" id="fontSize" min="40" max="300" value="120"
+          class="w-full accent-white cursor-pointer" />
+      </div>
+
+      <!-- Segundos -->
+      <div class="flex items-center justify-between">
+        <label for="showSeconds" class="text-zinc-400 text-sm">Mostrar segundos</label>
+        <input type="checkbox" id="showSeconds" class="accent-white w-5 h-5 cursor-pointer" />
+      </div>
+
+      <!-- Milisegundos -->
+      <div class="flex items-center justify-between">
+        <label for="showMilliseconds" class="text-zinc-400 text-sm">Mostrar milisegundos</label>
+        <input type="checkbox" id="showMilliseconds" class="accent-white w-5 h-5 cursor-pointer" />
+      </div>
+
+      <!-- Microsegundos visuales -->
+      <div class="flex items-center justify-between">
+        <label for="showMicroseconds" class="text-zinc-400 text-sm">Microsegundos visuales</label>
+        <input type="checkbox" id="showMicroseconds" class="accent-white w-5 h-5 cursor-pointer" />
+      </div>
+
+      <!-- Zona horaria -->
+      <div class="space-y-1">
+        <label for="timezone" class="text-zinc-400 text-sm block">Zona horaria</label>
+        <select id="timezone" class="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 border border-zinc-700 focus:outline-none focus:border-zinc-500">
+          <option value="America/Bogota">America/Bogota</option>
+          <option value="America/New_York">America/New_York</option>
+          <option value="America/Mexico_City">America/Mexico_City</option>
+          <option value="America/Sao_Paulo">America/Sao_Paulo</option>
+          <option value="Europe/Madrid">Europe/Madrid</option>
+          <option value="Europe/London">Europe/London</option>
+          <option value="Asia/Tokyo">Asia/Tokyo</option>
+          <option value="Asia/Dubai">Asia/Dubai</option>
+          <option value="Australia/Sydney">Australia/Sydney</option>
+        </select>
+      </div>
+
+      <!-- Formato 12h / 24h -->
+      <div class="space-y-1">
+        <label for="hour12" class="text-zinc-400 text-sm block">Formato de hora</label>
+        <select id="hour12" class="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 border border-zinc-700 focus:outline-none focus:border-zinc-500">
+          <option value="false">24 horas</option>
+          <option value="true">12 horas (AM/PM)</option>
+        </select>
+      </div>
+
+      <a href="/" class="block text-center text-zinc-500 hover:text-white text-sm pt-2 transition-colors duration-200">
+        ← Volver al reloj
+      </a>
+    </div>
+
+    <script is:inline>
+      const STORAGE_KEY = "cool-clock-settings";
+
+      const SYSTEM_FONTS = {
+        "Mono (sistema)":  "ui-monospace, monospace",
+        "Sans (sistema)":  "ui-sans-serif, sans-serif",
+        "Serif (sistema)": "ui-serif, serif",
+        "Courier New":     "'Courier New', monospace",
+        "Georgia":         "Georgia, serif",
+      };
+
+      const DEFAULTS = {
+        fontFamily: "Mono (sistema)",
+        backgroundColor: "#050505",
+        textColor: "#ffffff",
+        fontSize: 120,
+        showSeconds: true,
+        showMilliseconds: false,
+        showMicroseconds: false,
+        timezone: "America/Bogota",
+        hour12: false,
+      };
+
+      function loadSettings() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? { ...DEFAULTS, ...JSON.parse(raw) } : { ...DEFAULTS };
+        } catch {
+          return { ...DEFAULTS };
+        }
+      }
+
+      function saveSettings(s) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+      }
+
+      function getFontFamily(name) {
+        return SYSTEM_FONTS[name] || ("'" + name + "', sans-serif");
+      }
+
+      function loadGoogleFont(name) {
+        if (SYSTEM_FONTS[name]) return Promise.resolve();
+        const id = "gf-" + name.replace(/\s+/g, "-").toLowerCase();
+        if (document.getElementById(id)) return Promise.resolve();
+        return new Promise(function(resolve) {
+          const link = document.createElement("link");
+          link.id = id;
+          link.rel = "stylesheet";
+          link.href =
+            "https://fonts.googleapis.com/css2?family=" +
+            encodeURIComponent(name) +
+            ":wght@400;700&display=swap";
+          link.onload = resolve;
+          link.onerror = resolve;
+          document.head.appendChild(link);
+        });
+      }
+
+      const settings = loadSettings();
+      const fontInput  = document.getElementById("fontFamily");
+      const preview    = document.getElementById("fontPreview");
+
+      // Populate controls
+      fontInput.value = settings.fontFamily;
+      document.getElementById("backgroundColor").value  = settings.backgroundColor;
+      document.getElementById("textColor").value        = settings.textColor;
+      document.getElementById("fontSize").value         = settings.fontSize;
+      document.getElementById("fontSizeLabel").textContent = settings.fontSize + "px";
+      document.getElementById("showSeconds").checked    = settings.showSeconds;
+      document.getElementById("showMilliseconds").checked = settings.showMilliseconds;
+      document.getElementById("showMicroseconds").checked = settings.showMicroseconds;
+      document.getElementById("timezone").value         = settings.timezone;
+      document.getElementById("hour12").value           = String(settings.hour12);
+
+      // Apply initial font to preview
+      loadGoogleFont(settings.fontFamily).then(function() {
+        preview.style.fontFamily = getFontFamily(settings.fontFamily);
+      });
+
+      // Update font preview on every keystroke / selection
+      var fontDebounce;
+      fontInput.addEventListener("input", function() {
+        clearTimeout(fontDebounce);
+        fontDebounce = setTimeout(function() {
+          const name = fontInput.value.trim();
+          if (!name) return;
+          loadGoogleFont(name).then(function() {
+            preview.style.fontFamily = getFontFamily(name);
+          });
+        }, 400);
+      });
+
+      function onChange() {
+        settings.fontFamily       = document.getElementById("fontFamily").value.trim() || DEFAULTS.fontFamily;
+        settings.backgroundColor  = document.getElementById("backgroundColor").value;
+        settings.textColor        = document.getElementById("textColor").value;
+        settings.fontSize         = Number(document.getElementById("fontSize").value);
+        settings.showSeconds      = document.getElementById("showSeconds").checked;
+        settings.showMilliseconds = document.getElementById("showMilliseconds").checked;
+        settings.showMicroseconds = document.getElementById("showMicroseconds").checked;
+        settings.timezone         = document.getElementById("timezone").value;
+        settings.hour12           = document.getElementById("hour12").value === "true";
+        document.getElementById("fontSizeLabel").textContent = settings.fontSize + "px";
+        saveSettings(settings);
+      }
+
+      document.querySelectorAll("input, select").forEach(function(el) {
+        el.addEventListener("input", onChange);
+        el.addEventListener("change", onChange);
+      });
+    </script>
+  </body>
+</html>
