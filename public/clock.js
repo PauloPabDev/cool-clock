@@ -2,11 +2,11 @@ const STORAGE_KEY = "cool-clock-settings";
 
 // System fonts: name → CSS font-family (no Google Fonts request needed)
 const SYSTEM_FONTS = {
-  "Mono (sistema)":  "ui-monospace, monospace",
-  "Sans (sistema)":  "ui-sans-serif, sans-serif",
+  "Mono (sistema)": "ui-monospace, monospace",
+  "Sans (sistema)": "ui-sans-serif, sans-serif",
   "Serif (sistema)": "ui-serif, serif",
-  "Courier New":     "'Courier New', monospace",
-  "Georgia":         "Georgia, serif",
+  "Courier New": "'Courier New', monospace",
+  "Georgia": "Georgia, serif",
 };
 
 const DEFAULTS = {
@@ -16,7 +16,6 @@ const DEFAULTS = {
   fontSize: 120,
   showSeconds: true,
   showMilliseconds: false,
-  showMicroseconds: false,
   timezone: "America/Bogota",
   hour12: false,
 };
@@ -37,15 +36,14 @@ const DEFAULTS = {
 function applyQueryParams(s) {
   const p = new URLSearchParams(window.location.search);
 
-  if (p.has("font"))    s.fontFamily      = p.get("font");
-  if (p.has("size"))    s.fontSize        = Math.max(10, Math.min(600, Number(p.get("size")) || s.fontSize));
-  if (p.has("bg"))      s.backgroundColor = normalizeColor(p.get("bg"));
-  if (p.has("color"))   s.textColor       = normalizeColor(p.get("color"));
-  if (p.has("seconds")) s.showSeconds     = parseBool(p.get("seconds"));
-  if (p.has("ms"))      s.showMilliseconds = parseBool(p.get("ms"));
-  if (p.has("us"))      s.showMicroseconds = parseBool(p.get("us"));
-  if (p.has("tz"))      s.timezone        = p.get("tz");
-  if (p.has("h12"))     s.hour12          = parseBool(p.get("h12"));
+  if (p.has("font")) s.fontFamily = p.get("font");
+  if (p.has("size")) s.fontSize = Math.max(10, Math.min(600, Number(p.get("size")) || s.fontSize));
+  if (p.has("bg")) s.backgroundColor = normalizeColor(p.get("bg"));
+  if (p.has("color")) s.textColor = normalizeColor(p.get("color"));
+  if (p.has("seconds")) s.showSeconds = parseBool(p.get("seconds"));
+  if (p.has("ms")) s.showMilliseconds = parseBool(p.get("ms"));
+  if (p.has("tz")) s.timezone = p.get("tz");
+  if (p.has("h12")) s.hour12 = parseBool(p.get("h12"));
 
   return s;
 }
@@ -99,6 +97,7 @@ function applySettings(s) {
   clockEl.style.color = s.textColor;
   clockEl.style.fontFamily = getFontFamily(s.fontFamily);
   clockEl.style.fontSize = s.fontSize + "px";
+  clockEl.style.fontVariantNumeric = "tabular-nums";
 }
 
 function formatTime(s) {
@@ -115,11 +114,7 @@ function formatTime(s) {
   let str = fmt.format(now);
 
   if (s.showSeconds && s.showMilliseconds) {
-    str += "." + String(now.getMilliseconds()).padStart(3, "0");
-  }
-
-  if (s.showSeconds && s.showMilliseconds && s.showMicroseconds) {
-    str += "." + String(Math.floor((performance.now() % 1) * 1000)).padStart(3, "0");
+    str += "." + String(Math.floor(now.getMilliseconds() / 100)).padStart(1, "0");
   }
 
   return str;

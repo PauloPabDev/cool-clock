@@ -161,12 +161,6 @@ import "../styles/global.css";
         <input type="checkbox" id="showMilliseconds" class="accent-white w-5 h-5 cursor-pointer" />
       </div>
 
-      <!-- Microsegundos visuales -->
-      <div class="flex items-center justify-between">
-        <label for="showMicroseconds" class="text-zinc-400 text-sm">Microsegundos visuales</label>
-        <input type="checkbox" id="showMicroseconds" class="accent-white w-5 h-5 cursor-pointer" />
-      </div>
-
       <!-- Zona horaria -->
       <div class="space-y-1">
         <label for="timezone" class="text-zinc-400 text-sm block">Zona horaria</label>
@@ -192,7 +186,28 @@ import "../styles/global.css";
         </select>
       </div>
 
-      <a href="/" class="block text-center text-zinc-500 hover:text-white text-sm pt-2 transition-colors duration-200">
+      <!-- Compartir -->
+      <div class="space-y-2 pt-2 border-t border-zinc-800">
+        <p class="text-zinc-400 text-sm">Compartir configuración</p>
+        <div class="flex gap-2">
+          <input
+            id="shareUrl"
+            type="text"
+            readonly
+            class="flex-1 bg-zinc-800 text-zinc-300 text-xs rounded-lg px-3 py-2 border border-zinc-700 focus:outline-none cursor-text select-all truncate"
+            placeholder="El enlace aparecerá aquí…"
+          />
+          <button
+            id="shareBtn"
+            class="shrink-0 bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-500 text-white text-sm px-4 py-2 rounded-lg transition-colors duration-150"
+          >
+            Copiar
+          </button>
+        </div>
+        <p id="shareFeedback" class="text-green-400 text-xs h-4"></p>
+      </div>
+
+      <a href="/" class="block text-center text-zinc-500 hover:text-white text-sm transition-colors duration-200">
         ← Volver al reloj
       </a>
     </div>
@@ -215,7 +230,6 @@ import "../styles/global.css";
         fontSize: 120,
         showSeconds: true,
         showMilliseconds: false,
-        showMicroseconds: false,
         timezone: "America/Bogota",
         hour12: false,
       };
@@ -267,7 +281,6 @@ import "../styles/global.css";
       document.getElementById("fontSizeLabel").textContent = settings.fontSize + "px";
       document.getElementById("showSeconds").checked    = settings.showSeconds;
       document.getElementById("showMilliseconds").checked = settings.showMilliseconds;
-      document.getElementById("showMicroseconds").checked = settings.showMicroseconds;
       document.getElementById("timezone").value         = settings.timezone;
       document.getElementById("hour12").value           = String(settings.hour12);
 
@@ -296,7 +309,6 @@ import "../styles/global.css";
         settings.fontSize         = Number(document.getElementById("fontSize").value);
         settings.showSeconds      = document.getElementById("showSeconds").checked;
         settings.showMilliseconds = document.getElementById("showMilliseconds").checked;
-        settings.showMicroseconds = document.getElementById("showMicroseconds").checked;
         settings.timezone         = document.getElementById("timezone").value;
         settings.hour12           = document.getElementById("hour12").value === "true";
         document.getElementById("fontSizeLabel").textContent = settings.fontSize + "px";
@@ -306,6 +318,42 @@ import "../styles/global.css";
       document.querySelectorAll("input, select").forEach(function(el) {
         el.addEventListener("input", onChange);
         el.addEventListener("change", onChange);
+      });
+
+      // --- Compartir ---
+      function buildShareUrl() {
+        const p = new URLSearchParams();
+        p.set("font",    settings.fontFamily);
+        p.set("size",    settings.fontSize);
+        p.set("bg",      settings.backgroundColor.replace("#", ""));
+        p.set("color",   settings.textColor.replace("#", ""));
+        p.set("seconds", settings.showSeconds    ? "1" : "0");
+        p.set("ms",      settings.showMilliseconds ? "1" : "0");
+        p.set("tz",      settings.timezone);
+        p.set("h12",     settings.hour12 ? "1" : "0");
+        return window.location.origin + "/?" + p.toString();
+      }
+
+      function refreshShareUrl() {
+        document.getElementById("shareUrl").value = buildShareUrl();
+      }
+
+      // Actualiza el enlace cada vez que cambia algo
+      var origOnChange = onChange;
+      onChange = function() {
+        origOnChange();
+        refreshShareUrl();
+      };
+
+      refreshShareUrl();
+
+      document.getElementById("shareBtn").addEventListener("click", function() {
+        const url = buildShareUrl();
+        navigator.clipboard.writeText(url).then(function() {
+          const fb = document.getElementById("shareFeedback");
+          fb.textContent = "¡Enlace copiado!";
+          setTimeout(function() { fb.textContent = ""; }, 2500);
+        });
       });
     </script>
   </body>
