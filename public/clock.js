@@ -1,6 +1,5 @@
 const STORAGE_KEY = "cool-clock-settings";
 
-// System fonts: name → CSS font-family (no Google Fonts request needed)
 const SYSTEM_FONTS = {
   "Mono (sistema)": "ui-monospace, monospace",
   "Sans (sistema)": "ui-sans-serif, sans-serif",
@@ -29,7 +28,6 @@ const DEFAULTS = {
 //  ?color=00ff88
 //  ?seconds=0          (0/1 or false/true)
 //  ?ms=1
-//  ?us=1
 //  ?tz=Asia/Tokyo
 //  ?h12=1
 // ---------------------------------------------------------------------------
@@ -49,7 +47,6 @@ function applyQueryParams(s) {
 }
 
 function normalizeColor(val) {
-  // Accept "ff0000" or "#ff0000" → "#ff0000"
   val = val.trim();
   if (!val.startsWith("#")) val = "#" + val;
   return val;
@@ -96,8 +93,11 @@ function applySettings(s) {
   document.body.style.backgroundColor = s.backgroundColor;
   clockEl.style.color = s.textColor;
   clockEl.style.fontFamily = getFontFamily(s.fontFamily);
-  clockEl.style.fontSize = s.fontSize + "px";
   clockEl.style.fontVariantNumeric = "tabular-nums";
+  // Use clamp() so the clock scales down on small screens automatically.
+  // Reference width: 1000px → at 1000px viewport the size equals s.fontSize px.
+  // Below 1000px it shrinks proportionally; above it stays at the desired px.
+  clockEl.style.fontSize = `clamp(10px, ${s.fontSize / 10}vw, ${s.fontSize}px)`;
 }
 
 function formatTime(s) {
@@ -114,7 +114,7 @@ function formatTime(s) {
   let str = fmt.format(now);
 
   if (s.showSeconds && s.showMilliseconds) {
-    str += "." + String(Math.floor(now.getMilliseconds() / 100)).padStart(1, "0");
+    str += "." + Math.floor(now.getMilliseconds() / 100);
   }
 
   return str;
@@ -122,20 +122,23 @@ function formatTime(s) {
 
 const clockEl = document.getElementById("clock");
 
-// Query params overlay localStorage; they don't overwrite saved settings
 const settings = applyQueryParams(loadSettings());
 
-// Si la URL trajo parámetros, guardarlos para que la config quede persistente
 if (window.location.search) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
 }
 
 function tick() {
+  const now = Date.now();
   clockEl.textContent = formatTime(settings);
-  requestAnimationFrame(tick);
+
+  // Sync the next update to the exact boundary (second or tenth-of-second)
+  // so the clock never lags behind visually.
+  const interval = settings.showMilliseconds ? 100 : 1000;
+  setTimeout(tick, interval - (now % interval));
 }
 
 loadGoogleFont(settings.fontFamily).then(() => {
   applySettings(settings);
-  requestAnimationFrame(tick);
+  tick();
 });

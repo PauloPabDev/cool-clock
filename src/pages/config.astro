@@ -11,7 +11,7 @@ import "../styles/global.css";
     <title>Configurar — Cool Clock</title>
   </head>
   <body class="bg-zinc-950 min-h-screen flex items-center justify-center p-6">
-    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 w-full max-w-lg shadow-2xl space-y-6">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sm:p-8 w-full max-w-lg shadow-2xl space-y-6">
 
       <h1 class="text-white text-xl font-semibold tracking-wide">Configurar reloj</h1>
 
@@ -269,27 +269,42 @@ import "../styles/global.css";
         });
       }
 
+      function buildShareUrl() {
+        const p = new URLSearchParams();
+        p.set("font",    settings.fontFamily);
+        p.set("size",    settings.fontSize);
+        p.set("bg",      settings.backgroundColor.replace("#", ""));
+        p.set("color",   settings.textColor.replace("#", ""));
+        p.set("seconds", settings.showSeconds    ? "1" : "0");
+        p.set("ms",      settings.showMilliseconds ? "1" : "0");
+        p.set("tz",      settings.timezone);
+        p.set("h12",     settings.hour12 ? "1" : "0");
+        return window.location.origin + "/?" + p.toString();
+      }
+
+      function refreshShareUrl() {
+        document.getElementById("shareUrl").value = buildShareUrl();
+      }
+
       const settings = loadSettings();
       const fontInput  = document.getElementById("fontFamily");
       const preview    = document.getElementById("fontPreview");
 
       // Populate controls
       fontInput.value = settings.fontFamily;
-      document.getElementById("backgroundColor").value  = settings.backgroundColor;
-      document.getElementById("textColor").value        = settings.textColor;
-      document.getElementById("fontSize").value         = settings.fontSize;
+      document.getElementById("backgroundColor").value    = settings.backgroundColor;
+      document.getElementById("textColor").value          = settings.textColor;
+      document.getElementById("fontSize").value           = settings.fontSize;
       document.getElementById("fontSizeLabel").textContent = settings.fontSize + "px";
-      document.getElementById("showSeconds").checked    = settings.showSeconds;
+      document.getElementById("showSeconds").checked      = settings.showSeconds;
       document.getElementById("showMilliseconds").checked = settings.showMilliseconds;
-      document.getElementById("timezone").value         = settings.timezone;
-      document.getElementById("hour12").value           = String(settings.hour12);
+      document.getElementById("timezone").value           = settings.timezone;
+      document.getElementById("hour12").value             = String(settings.hour12);
 
-      // Apply initial font to preview
       loadGoogleFont(settings.fontFamily).then(function() {
         preview.style.fontFamily = getFontFamily(settings.fontFamily);
       });
 
-      // Update font preview on every keystroke / selection
       var fontDebounce;
       fontInput.addEventListener("input", function() {
         clearTimeout(fontDebounce);
@@ -313,6 +328,7 @@ import "../styles/global.css";
         settings.hour12           = document.getElementById("hour12").value === "true";
         document.getElementById("fontSizeLabel").textContent = settings.fontSize + "px";
         saveSettings(settings);
+        refreshShareUrl();
       }
 
       document.querySelectorAll("input, select").forEach(function(el) {
@@ -320,40 +336,25 @@ import "../styles/global.css";
         el.addEventListener("change", onChange);
       });
 
-      // --- Compartir ---
-      function buildShareUrl() {
-        const p = new URLSearchParams();
-        p.set("font",    settings.fontFamily);
-        p.set("size",    settings.fontSize);
-        p.set("bg",      settings.backgroundColor.replace("#", ""));
-        p.set("color",   settings.textColor.replace("#", ""));
-        p.set("seconds", settings.showSeconds    ? "1" : "0");
-        p.set("ms",      settings.showMilliseconds ? "1" : "0");
-        p.set("tz",      settings.timezone);
-        p.set("h12",     settings.hour12 ? "1" : "0");
-        return window.location.origin + "/?" + p.toString();
-      }
-
-      function refreshShareUrl() {
-        document.getElementById("shareUrl").value = buildShareUrl();
-      }
-
-      // Actualiza el enlace cada vez que cambia algo
-      var origOnChange = onChange;
-      onChange = function() {
-        origOnChange();
-        refreshShareUrl();
-      };
-
       refreshShareUrl();
 
       document.getElementById("shareBtn").addEventListener("click", function() {
         const url = buildShareUrl();
-        navigator.clipboard.writeText(url).then(function() {
-          const fb = document.getElementById("shareFeedback");
-          fb.textContent = "¡Enlace copiado!";
-          setTimeout(function() { fb.textContent = ""; }, 2500);
-        });
+        const fb = document.getElementById("shareFeedback");
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(function() {
+            fb.textContent = "¡Enlace copiado!";
+            setTimeout(function() { fb.textContent = ""; }, 2500);
+          }).catch(function() {
+            document.getElementById("shareUrl").select();
+            fb.textContent = "Selecciona el texto y cópialo manualmente";
+            setTimeout(function() { fb.textContent = ""; }, 3000);
+          });
+        } else {
+          document.getElementById("shareUrl").select();
+          fb.textContent = "Selecciona el texto y cópialo manualmente";
+          setTimeout(function() { fb.textContent = ""; }, 3000);
+        }
       });
     </script>
   </body>
